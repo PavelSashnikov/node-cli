@@ -8,7 +8,7 @@ export class Handler {
     this._cd();
   }
   get ls() {
-    this._cd();
+    this._ls();
   }
 
   _up = () => {
