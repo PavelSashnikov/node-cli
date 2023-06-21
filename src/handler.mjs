@@ -1,4 +1,5 @@
 import fileActions from './working-modules/fileActions.mjs';
+import hashModule from './working-modules/hash.mjs';
 import navigation from './working-modules/navigation.mjs';
 import osModule from './working-modules/os.mjs';
 
@@ -34,6 +35,9 @@ class Handler {
   }
   get os() {
     this._os();
+  }
+  get hash() {
+    this._hash();
   }
 
   static getInstance() {
@@ -81,6 +85,10 @@ class Handler {
 
   _os() {
     osModule.getOsData();
+  }
+
+  _hash() {
+    hashModule.hashFile();
   }
 }
 
