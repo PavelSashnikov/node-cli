@@ -1,6 +1,7 @@
 import { INVALID_MESSAGE } from './constants.mjs';
 import { DataStorage } from './dataStorage.mjs';
 import * as path from 'path';
+import { readdir, stat } from 'fs';
 
 class Navigation {
   constructor() {
@@ -32,11 +33,58 @@ class Navigation {
     }
 
     const currentArgs = path.normalize(this.data.lineArguments[0]);
+    let newPath = '';
+
     if (path.isAbsolute(currentArgs)) {
-      this.data.currentPath = currentArgs;
+      newPath = currentArgs;
     } else {
-      this.data.currentPath = path.join(this.data.currentPath, currentArgs);
+      newPath = path.join(this.data.currentPath, currentArgs);
     }
+
+    stat(newPath, (err, status) => {
+      if (err || status.isFile()) {
+        console.log(INVALID_MESSAGE);
+      } else {
+        this.data.currentPath = newPath;
+      }
+    });
+  }
+
+  ls() {
+    if (this.data.lineArguments.length) {
+      console.log(INVALID_MESSAGE);
+      return;
+    }
+    readdir(this.data.currentPath, { withFileTypes: true }, (err, files) => {
+      if (err) {
+        throw new Error();
+      }
+      const fileArr = [];
+      const dirArr = [];
+      
+      files.forEach((file) => {
+        if (file.isFile()) {
+          fileArr.push({
+            name: file.name,
+            type: 'file',
+          });
+        } else {
+          dirArr.push({
+            name: file.name,
+            type: 'directory',
+          });
+        }
+      });
+      const sortedFiles = fileArr.sort((a, b) => {
+        a.name.localeCompare(b.name);
+      });
+      const sortedDirs = dirArr.sort((a, b) => {
+        a.name.localeCompare(b.name);
+      });
+
+      console.table(sortedDirs.concat(sortedFiles));
+      this.data.showLocation();
+    });
   }
 }
 const navigation = Navigation.getInstance();

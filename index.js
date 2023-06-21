@@ -23,7 +23,6 @@ rl.on('line', function (command) {
     try {
       data.lineArguments = args;
       handler[mainCommand];
-      data.showLocation();
     } catch (error) {
       console.log(ERROR_MESSAGE);
     }

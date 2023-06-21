@@ -21,6 +21,7 @@ export class DataStorage {
   }
   set currentPath(path) {
     this._currentPath = path;
+    this.showLocation();
   }
 
   get lineArguments() {

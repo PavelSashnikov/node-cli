@@ -29,9 +29,7 @@ class Handler {
   };
 
   _ls = () => {
-    console.log(
-      `Print in console list of all files and folders in current directory`
-    );
+    navigation.ls();
   };
 }
 
