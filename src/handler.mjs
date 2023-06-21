@@ -1,3 +1,4 @@
+import fileActions from './working-modules/fileActions.mjs';
 import navigation from './working-modules/navigation.mjs';
 
 class Handler {
@@ -11,6 +12,24 @@ class Handler {
   }
   get ls() {
     this._ls();
+  }
+  get cat() {
+    this._cat();
+  }
+  get add() {
+    this._add();
+  }
+  get rn() {
+    this._rn();
+  }
+  get cp() {
+    this._cp();
+  }
+  get mv() {
+    this._mv();
+  }
+  get rm() {
+    this._rm();
   }
 
   static getInstance() {
@@ -31,6 +50,34 @@ class Handler {
   _ls = () => {
     navigation.ls();
   };
+
+  _cat() {
+    fileActions.cat();
+  }
+
+  _add() {
+    console.log('Create empty file in current working directory:');
+  }
+
+  _rn() {
+    console.log('Rename file (content should remain unchanged):');
+  }
+
+  _cp() {
+    console.log(
+      'Copy file (should be done using Readable and Writable streams):'
+    );
+  }
+
+  _mv() {
+    console.log(
+      'Move file (same as copy but initial file is deleted, copying part should be done using Readable and Writable streams'
+    );
+  }
+
+  _rm() {
+    console.log('Delete file:');
+  }
 }
 
 const handler = Handler.getInstance();
