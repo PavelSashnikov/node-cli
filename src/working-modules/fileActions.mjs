@@ -106,6 +106,10 @@ class FileActions {
     const read = createReadStream(join(this.data.currentPath, filename));
     const write = createWriteStream(join(newFilePath, filename));
     const stream = read.pipe(write);
+    read.on('error', () => {
+      console.log(INVALID_MESSAGE);
+      this.data.showLocation();
+    });
     stream.on('close', () => {
       this.data.showLocation();
     });
