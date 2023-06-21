@@ -1,11 +1,10 @@
-import { DataStorage } from './src/dataStorage.js';
-import { Handler } from './src/handler.js';
+import { DataStorage } from './src/dataStorage.mjs';
+import handler from './src/handler.mjs';
 import * as readline from 'node:readline/promises';
-import { sayBye, sayHi } from './src/messages.js';
-import { COM_EXIT, INVALID_MESSAGE } from './src/constants.mjs';
+import { sayBye, sayHi } from './src/messages.mjs';
+import { COM_EXIT, ERROR_MESSAGE, INVALID_MESSAGE } from './src/constants.mjs';
 
-const handler = new Handler();
-const data = new DataStorage(process.argv);
+const data = DataStorage.getInstance(process.argv);
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -13,14 +12,21 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', function (command) {
-  const comm = command;
-  if (command === COM_EXIT) {
+  const commandArr = command.trim().split(' ');
+  const [mainCommand, ...args] = commandArr;
+  if (mainCommand === COM_EXIT) {
     rl.close();
     return;
   }
 
-  if (comm in handler) {
-    handler[comm];
+  if (mainCommand in handler) {
+    try {
+      data.lineArguments = args;
+      handler[mainCommand];
+      data.showLocation();
+    } catch (error) {
+      console.log(ERROR_MESSAGE);
+    }
     return;
   }
   console.log(INVALID_MESSAGE);
@@ -30,4 +36,5 @@ rl.on('close', (command) => {
   sayBye(data.user);
 });
 
-sayHi(data.user);
+sayHi(data.user, data.currentPath);
+data.showLocation();
