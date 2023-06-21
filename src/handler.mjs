@@ -56,17 +56,15 @@ class Handler {
   }
 
   _add() {
-    console.log('Create empty file in current working directory:');
+    fileActions.add();
   }
 
   _rn() {
-    console.log('Rename file (content should remain unchanged):');
+    fileActions.rn();
   }
 
   _cp() {
-    console.log(
-      'Copy file (should be done using Readable and Writable streams):'
-    );
+    fileActions.cp();
   }
 
   _mv() {

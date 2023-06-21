@@ -20,6 +20,7 @@ class Navigation {
   up() {
     const newPath = this.data.currentPath.split(this.data.pathSeparator);
     if (newPath.length < 2) {
+      this.data.showLocation();
       return;
     }
     newPath.pop();
@@ -32,13 +33,13 @@ class Navigation {
       return;
     }
 
-    const currentArgs = path.normalize(this.data.lineArguments[0]);
+    const normalizedPath = path.normalize(this.data.lineArguments[0]);
     let newPath = '';
 
-    if (path.isAbsolute(currentArgs)) {
-      newPath = currentArgs;
+    if (path.isAbsolute(normalizedPath)) {
+      newPath = normalizedPath;
     } else {
-      newPath = path.join(this.data.currentPath, currentArgs);
+      newPath = path.join(this.data.currentPath, normalizedPath);
     }
 
     stat(newPath, (err, status) => {
