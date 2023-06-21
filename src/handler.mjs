@@ -1,5 +1,6 @@
 import fileActions from './working-modules/fileActions.mjs';
 import navigation from './working-modules/navigation.mjs';
+import osModule from './working-modules/os.mjs';
 
 class Handler {
   constructor() {}
@@ -30,6 +31,9 @@ class Handler {
   }
   get rm() {
     this._rm();
+  }
+  get os() {
+    this._os();
   }
 
   static getInstance() {
@@ -73,6 +77,10 @@ class Handler {
 
   _rm() {
     fileActions.rm();
+  }
+
+  _os() {
+    osModule.getOsData();
   }
 }
 

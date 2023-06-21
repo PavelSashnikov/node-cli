@@ -14,7 +14,6 @@ class FileActions {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
   }
-  data;
 
   static getInstance() {
     if (!this.instance) {

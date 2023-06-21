@@ -8,8 +8,6 @@ class Navigation {
     this.data = DataStorage.getInstance(process.argv);
   }
 
-  data;
-
   static getInstance() {
     if (!this.instance) {
       this.instance = new Navigation();
@@ -62,7 +60,7 @@ class Navigation {
       }
       const fileArr = [];
       const dirArr = [];
-      
+
       files.forEach((file) => {
         if (file.isFile()) {
           fileArr.push({

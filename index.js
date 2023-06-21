@@ -8,7 +8,9 @@ import {
   INVALID_MESSAGE,
 } from './src/storage/constants.mjs';
 
+
 const data = DataStorage.getInstance(process.argv);
+sayHi(data.user, data.currentPath);
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -29,6 +31,7 @@ rl.on('line', function (command) {
       handler[mainCommand];
     } catch (error) {
       console.log(ERROR_MESSAGE);
+      // console.log(error)
     }
     return;
   }
@@ -38,5 +41,3 @@ rl.on('line', function (command) {
 rl.on('close', (command) => {
   sayBye(data.user);
 });
-
-sayHi(data.user, data.currentPath);
