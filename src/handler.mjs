@@ -1,4 +1,4 @@
-import navigation from './navigation.mjs';
+import navigation from './working-modules/navigation.mjs';
 
 class Handler {
   constructor() {}

@@ -1,8 +1,8 @@
-import { DataStorage } from './src/dataStorage.mjs';
+import { DataStorage } from './src/storage/dataStorage.mjs';
 import handler from './src/handler.mjs';
 import * as readline from 'node:readline/promises';
-import { sayBye, sayHi } from './src/messages.mjs';
-import { COM_EXIT, ERROR_MESSAGE, INVALID_MESSAGE } from './src/constants.mjs';
+import { sayBye, sayHi } from './src/helpers/messages.mjs';
+import { COM_EXIT, ERROR_MESSAGE, INVALID_MESSAGE } from './src/storage/constants.mjs';
 
 const data = DataStorage.getInstance(process.argv);
 

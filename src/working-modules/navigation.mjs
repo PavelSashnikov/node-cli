@@ -1,5 +1,5 @@
-import { INVALID_MESSAGE } from './constants.mjs';
-import { DataStorage } from './dataStorage.mjs';
+import { INVALID_MESSAGE } from '../storage/constants.mjs';
+import { DataStorage } from '../storage/dataStorage.mjs';
 import * as path from 'path';
 import { readdir, stat } from 'fs';
 
