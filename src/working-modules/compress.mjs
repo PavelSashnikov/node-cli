@@ -1,7 +1,7 @@
 import { createReadStream, createWriteStream } from 'fs';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
-import { normalizePath } from '../helpers/helper.mjs';
-import { ERROR_MESSAGE, INVALID_MESSAGE } from '../storage/constants.mjs';
+import { checkArgs, normalizePath } from '../helpers/helper.mjs';
+import { ERROR_MESSAGE } from '../storage/constants.mjs';
 import { DataStorage } from '../storage/dataStorage.mjs';
 import { pipeline } from 'stream';
 import { basename } from 'path';
@@ -9,6 +9,7 @@ import { basename } from 'path';
 class Compress {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
+    this.isArgs = checkArgs.bind(this);
   }
 
   static getInstance() {
@@ -29,9 +30,7 @@ class Compress {
   }
 
   _bortli(bortliStream, isCompress) {
-    if (this.data.lineArguments.length !== 2) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(2)) {
       return;
     }
 

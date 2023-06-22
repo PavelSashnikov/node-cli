@@ -1,11 +1,12 @@
 import { INVALID_MESSAGE } from '../storage/constants.mjs';
 import { DataStorage } from '../storage/dataStorage.mjs';
-import * as path from 'path';
 import { readdir, stat } from 'fs';
+import { checkArgs } from '../helpers/helper.mjs';
 
 class Navigation {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
+    this.isArgs = checkArgs.bind(this);
   }
 
   static getInstance() {
@@ -16,6 +17,10 @@ class Navigation {
   }
 
   up() {
+    if (!this.isArgs(0)) {
+      return;
+    }
+
     const newPath = this.data.currentPath.split(this.data.pathSeparator);
     if (newPath.length < 2) {
       this.data.showLocation();
@@ -26,19 +31,14 @@ class Navigation {
   }
 
   cd() {
-    if (this.data.lineArguments.length !== 1) {
-      console.log(INVALID_MESSAGE);
+    if (!this.isArgs(1)) {
       return;
     }
 
-    const normalizedPath = path.normalize(this.data.lineArguments[0]);
-    let newPath = '';
-
-    if (path.isAbsolute(normalizedPath)) {
-      newPath = normalizedPath;
-    } else {
-      newPath = path.join(this.data.currentPath, normalizedPath);
-    }
+    const newPath = normalizePath(
+      this.data.currentPath,
+      this.data.lineArguments[0]
+    );
 
     stat(newPath, (err, status) => {
       if (err || status.isFile()) {
@@ -50,10 +50,10 @@ class Navigation {
   }
 
   ls() {
-    if (this.data.lineArguments.length) {
-      console.log(INVALID_MESSAGE);
+    if (!this.isArgs(0)) {
       return;
     }
+
     readdir(this.data.currentPath, { withFileTypes: true }, (err, files) => {
       if (err) {
         throw new Error();

@@ -1,11 +1,12 @@
 import { createHash } from 'crypto';
 import { createReadStream } from 'fs';
-import { isAbsolute, join, normalize } from 'path';
 import { DataStorage } from '../storage/dataStorage.mjs';
+import { checkArgs } from '../helpers/helper.mjs';
 
 class Hash {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
+    this.isArgs = checkArgs.bind(this);
   }
 
   static getInstance() {
@@ -16,20 +17,14 @@ class Hash {
   }
 
   hashFile() {
-    if (this.data.lineArguments.length !== 1) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(1)) {
       return;
     }
 
-    const normalizedPath = normalize(this.data.lineArguments[0]);
-    let filePath = '';
-
-    if (isAbsolute(normalizedPath)) {
-      filePath = normalizedPath;
-    } else {
-      filePath = join(this.data.currentPath, normalizedPath);
-    }
+    const filePath = normalizePath(
+      this.data.currentPath,
+      this.data.lineArguments[0]
+    );
 
     const read = createReadStream(filePath);
     const hashSum = createHash('sha256');

@@ -1,10 +1,12 @@
 import * as os from 'os';
 import { DataStorage } from '../storage/dataStorage.mjs';
 import { INVALID_MESSAGE } from '../storage/constants.mjs';
+import { checkArgs } from '../helpers/helper.mjs';
 
 class Os {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
+    this.isArgs = checkArgs.bind(this);
   }
 
   static getInstance() {
@@ -37,9 +39,7 @@ class Os {
 
   getOsData() {
     const params = this.data.lineArguments;
-    if (params.length !== 1 || !params[0].startsWith('--')) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(1) || !params[0].startsWith('--')) {
       return;
     }
 

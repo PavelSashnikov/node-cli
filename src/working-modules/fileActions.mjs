@@ -7,12 +7,14 @@ import {
   unlink,
   writeFile,
 } from 'fs';
-import { isAbsolute, join, normalize } from 'path';
+import { join } from 'path';
 import { ERROR_MESSAGE, INVALID_MESSAGE } from '../storage/constants.mjs';
+import { checkArgs, normalizePath } from '../helpers/helper.mjs';
 
 class FileActions {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
+    this.isArgs = checkArgs.bind(this);
   }
 
   static getInstance() {
@@ -23,11 +25,10 @@ class FileActions {
   }
 
   cat() {
-    if (this.data.lineArguments.length !== 1) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(1)) {
       return;
     }
+
     const file = this.data.lineArguments[0];
     const path = join(this.data.currentPath, file);
     stat(path, (err, status) => {
@@ -48,9 +49,7 @@ class FileActions {
   }
 
   add() {
-    if (this.data.lineArguments.length !== 1) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(1)) {
       return;
     }
 
@@ -66,9 +65,7 @@ class FileActions {
   }
 
   rn() {
-    if (this.data.lineArguments.length !== 2) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(2)) {
       return;
     }
 
@@ -87,53 +84,41 @@ class FileActions {
   }
 
   cp() {
-    if (this.data.lineArguments.length !== 2) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(2)) {
       return;
     }
 
     const filename = this.data.lineArguments[0];
-    const normalizedPath = normalize(this.data.lineArguments[1]);
-    let newFilePath = '';
-
-    if (isAbsolute(normalizedPath)) {
-      newFilePath = normalizedPath;
-    } else {
-      newFilePath = join(this.data.currentPath, normalizedPath);
-    }
+    let newFilePath = normalizePath(
+      this.data.currentPath,
+      this.data.lineArguments[1]
+    );
 
     const read = createReadStream(join(this.data.currentPath, filename));
     const write = createWriteStream(join(newFilePath, filename));
     const stream = read.pipe(write);
     read.on('error', () => {
-      console.log(INVALID_MESSAGE);
+      console.log(ERROR_MESSAGE);
       this.data.showLocation();
     });
     stream.on('close', () => {
       this.data.showLocation();
     });
     stream.on('error', () => {
-      console.log(INVALID_MESSAGE);
+      console.log(ERROR_MESSAGE);
     });
   }
 
   mv() {
-    if (this.data.lineArguments.length !== 2) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(2)) {
       return;
     }
 
     const filename = this.data.lineArguments[0];
-    const normalizedPath = normalize(this.data.lineArguments[1]);
-    let newFilePath = '';
-
-    if (isAbsolute(normalizedPath)) {
-      newFilePath = normalizedPath;
-    } else {
-      newFilePath = join(this.data.currentPath, normalizedPath);
-    }
+    let newFilePath = normalizePath(
+      this.data.currentPath,
+      this.data.lineArguments[1]
+    );
 
     const read = createReadStream(join(this.data.currentPath, filename));
     const write = createWriteStream(join(newFilePath, filename));
@@ -155,20 +140,14 @@ class FileActions {
   }
 
   rm() {
-    if (this.data.lineArguments.length !== 1) {
-      console.log(INVALID_MESSAGE);
-      this.data.showLocation();
+    if (!this.isArgs(1)) {
       return;
     }
 
-    const normalizedPath = normalize(this.data.lineArguments[0]);
-    let filePath = '';
-
-    if (isAbsolute(normalizedPath)) {
-      filePath = normalizedPath;
-    } else {
-      filePath = join(this.data.currentPath, normalizedPath);
-    }
+    let filePath = normalizePath(
+      this.data.currentPath,
+      this.data.lineArguments[0]
+    );
 
     unlink(filePath, (err) => {
       if (err) {
