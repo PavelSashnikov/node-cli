@@ -1,3 +1,4 @@
+import compress from './working-modules/compress.mjs';
 import fileActions from './working-modules/fileActions.mjs';
 import hashModule from './working-modules/hash.mjs';
 import navigation from './working-modules/navigation.mjs';
@@ -38,6 +39,12 @@ class Handler {
   }
   get hash() {
     this._hash();
+  }
+  get compress() {
+    this._compress();
+  }
+  get decompress() {
+    this._decompress();
   }
 
   static getInstance() {
@@ -89,6 +96,14 @@ class Handler {
 
   _hash() {
     hashModule.hashFile();
+  }
+
+  _compress() {
+    compress.compress();
+  }
+
+  _decompress() {
+    compress.decompress();
   }
 }
 
