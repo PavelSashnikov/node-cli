@@ -30,8 +30,9 @@ rl.on('line', function (command) {
       data.lineArguments = args;
       handler[mainCommand];
     } catch (error) {
-      // console.log(ERROR_MESSAGE);
-      console.log(error)
+      console.log(ERROR_MESSAGE);
+      // use it to debug
+      // console.log(error)
     }
     return;
   }

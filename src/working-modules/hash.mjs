@@ -1,12 +1,14 @@
 import { createHash } from 'crypto';
 import { createReadStream } from 'fs';
 import { DataStorage } from '../storage/dataStorage.mjs';
-import { checkArgs } from '../helpers/helper.mjs';
+import { checkArgs, streamCb, normalizePath } from '../helpers/helper.mjs';
+import { pipeline } from 'stream';
 
 class Hash {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
     this.isArgs = checkArgs.bind(this);
+    this.streamCb = streamCb.bind(this);
   }
 
   static getInstance() {
@@ -33,10 +35,9 @@ class Hash {
     read.on('end', () => {
       hashSum.end();
       console.log(hashSum.read());
-      this.data.showLocation();
     });
 
-    read.pipe(hashSum);
+    pipeline(read, hashSum, this.streamCb);
   }
 }
 

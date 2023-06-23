@@ -1,12 +1,12 @@
-import { INVALID_MESSAGE } from '../storage/constants.mjs';
 import { DataStorage } from '../storage/dataStorage.mjs';
 import { readdir, stat } from 'fs';
-import { checkArgs } from '../helpers/helper.mjs';
+import { checkArgs, streamCb, normalizePath } from '../helpers/helper.mjs';
 
 class Navigation {
   constructor() {
     this.data = DataStorage.getInstance(process.argv);
     this.isArgs = checkArgs.bind(this);
+    this.streamCb = streamCb.bind(this);
   }
 
   static getInstance() {
@@ -42,7 +42,7 @@ class Navigation {
 
     stat(newPath, (err, status) => {
       if (err || status.isFile()) {
-        console.log(INVALID_MESSAGE);
+        this.streamCb(true);
       } else {
         this.data.currentPath = newPath;
       }
@@ -56,7 +56,7 @@ class Navigation {
 
     readdir(this.data.currentPath, { withFileTypes: true }, (err, files) => {
       if (err) {
-        throw new Error();
+        this.streamCb(err);
       }
       const fileArr = [];
       const dirArr = [];

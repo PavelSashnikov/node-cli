@@ -39,17 +39,17 @@ class Os {
 
   getOsData() {
     const params = this.data.lineArguments;
-    if (!this.isArgs(1) || !params[0].startsWith('--')) {
+    if (!this.isArgs(1, params[0].startsWith('--'))) {
       return;
     }
 
     const param = params[0].replace('--', '');
     if (this[param]) {
       console.log(this[param]);
+      this.data.showLocation();
     } else {
       console.log(INVALID_MESSAGE);
     }
-    this.data.showLocation();
   }
 }
 
