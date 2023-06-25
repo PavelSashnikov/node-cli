@@ -24,6 +24,7 @@ export function checkArgs(n, cond = true) {
 // bind it to class to get dataStorage instance
 export function streamCb(err) {
   if (err) {
+    console.log(err.message)
     console.log(ERROR_MESSAGE);
   }
   this.data.showLocation();

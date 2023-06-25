@@ -46,10 +46,10 @@ class Os {
     const param = params[0].replace('--', '');
     if (this[param]) {
       console.log(this[param]);
-      this.data.showLocation();
     } else {
       console.log(INVALID_MESSAGE);
     }
+    this.data.showLocation();
   }
 }
 
