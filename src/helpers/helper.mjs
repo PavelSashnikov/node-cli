@@ -15,6 +15,7 @@ export function normalizePath(currPath, endpoint) {
 export function checkArgs(n, cond = true) {
   if (this.data.lineArguments.length !== n || !cond) {
     console.log(INVALID_MESSAGE);
+    this.data.showLocation();
     return false;
   }
   return true;
@@ -24,7 +25,14 @@ export function checkArgs(n, cond = true) {
 export function streamCb(err) {
   if (err) {
     console.log(ERROR_MESSAGE);
-    return;
   }
   this.data.showLocation();
+}
+
+export function getCommandArr(command) {
+  const reg = /['"`]/g;
+  if (command.match(reg)) {
+    return command.trim().replace(reg, ' ').trim().split('  ').map(p => p.trim());
+  }
+  return command.trim().split(' ').map(p => p.trim());
 }

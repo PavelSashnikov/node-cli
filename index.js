@@ -7,6 +7,7 @@ import {
   ERROR_MESSAGE,
   INVALID_MESSAGE,
 } from './src/storage/constants.mjs';
+import { getCommandArr } from './src/helpers/helper.mjs';
 
 
 const data = DataStorage.getInstance(process.argv);
@@ -18,7 +19,7 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', function (command) {
-  const commandArr = command.trim().split(' ');
+  const commandArr = getCommandArr(command);
   const [mainCommand, ...args] = commandArr;
   if (mainCommand === COM_EXIT) {
     rl.close();
@@ -31,12 +32,14 @@ rl.on('line', function (command) {
       handler[mainCommand];
     } catch (error) {
       console.log(ERROR_MESSAGE);
+      data.showLocation();
       // use it to debug
       // console.log(error)
     }
     return;
   }
   console.log(INVALID_MESSAGE);
+  data.showLocation();
 });
 
 rl.on('close', (command) => {

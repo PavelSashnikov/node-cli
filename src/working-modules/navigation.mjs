@@ -21,13 +21,14 @@ class Navigation {
       return;
     }
 
-    const newPath = this.data.currentPath.split(this.data.pathSeparator);
+    const newPath = this.data.currentPath.split(this.data.pathSeparator).filter(Boolean);
     if (newPath.length < 2) {
       this.data.showLocation();
       return;
     }
     newPath.pop();
-    this.data.currentPath = newPath.join(this.data.pathSeparator);
+    this.data.currentPath =
+      newPath.join(this.data.pathSeparator) + this.data.pathSeparator;
   }
 
   cd() {
@@ -67,7 +68,7 @@ class Navigation {
             name: file.name,
             type: 'file',
           });
-        } else {
+        } else if (file.isDirectory()) {
           dirArr.push({
             name: file.name,
             type: 'directory',
